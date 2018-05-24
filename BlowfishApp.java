@@ -6,6 +6,7 @@
 package blowfishapp;
 
 import java.math.BigInteger;
+import sun.awt.SunHints;
 
 /**
  *
@@ -90,20 +91,43 @@ class Blowfish
     }
     
     public BigInteger F(BigInteger x) {
-        int hexx = 255;
+        BigInteger hexx = new BigInteger("255");
+        //int hexx= 255;
+        //int a[] = {0,0,0,0}; 
         BigInteger[] a = new BigInteger[4];
         for (int i = 0; i < 4; i++) {
             a[i] = BigInteger.valueOf(0);
         }
         
         for (int i = 0; i < 4 ; i++) {
-            a[i] = x ^ (-32+(8*i));
+            int i1 = -32 + (8*i);
+            a[i] = x.shiftRight(i1);
+            a[i] = a[i].and(hexx);
+            a[i] = sbox[i][a[i]+1];
         }
-        
+        a[1] = a[1].add(a[2]);
+        BigInteger y1 = a[1].or(a[3]);
+        y1 = y1.add(a[4]);
+        BigInteger val = new BigInteger("4294967296");
+        BigInteger y = y1.mod(val);
         return y;
     }
-}
 
+
+public void InitializeBlowfish(char [] key , keybytes)
+{
+    int j=1,n = N;
+    BigInteger hex1 = new BigInteger("4294967295"); 
+    BigInteger hex2 = new BigInteger("18446744069414600000");
+    for (int i = 0; i < n+2; i++) {
+        int data = 0;
+        for (int k = 0; k < 4; k++) {
+            int bitshiftd = data >> 8;
+            data []= bitshiftd | key[j];
+        }
+    }
+}
+}
 public class BlowfishApp extends javax.swing.JFrame {
 
     /**
